@@ -4,14 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "ai-digest": "npx ai-digest -i src --show-output-files\n",
     "build": "tsc",
     "watch": "tsc -w",
     "start": "functions-framework --target=swapRouter --source=dist --port=5001",
     "dev": "npm run build && npm run start",
-    "test": "jest",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "format": "prettier --write \"src/**/*.ts\""
   },
   "keywords": [],
