@@ -5,14 +5,13 @@ steps:
   - name: 'gcr.io/cloud-builders/npm'
     args: ['run', 'build']
 
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
+      - 'gcloud'
       - 'functions'
       - 'deploy'
-      - 'swap-router'
+      - 'get-quote'
       - '--trigger-http'
-      - '--runtime=nodejs20'
-      - '--entry-point=swapRouter'
-      - '--memory=256MB'
-      - '--region=us-central1'
+      - '--runtime=nodejs22'
+      - '--region=us-west2'
       - '--allow-unauthenticated'

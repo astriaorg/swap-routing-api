@@ -1,19 +1,19 @@
 import { HttpFunction } from "@google-cloud/functions-framework";
 import { logger } from "./utils/logger";
 
-interface SwapRequest {
+interface QuoteRequest {
   tokenIn: string;
   tokenOut: string;
   amount: string;
 }
 
-interface SwapResponse {
+interface QuoteResponse {
   route: string[];
   estimatedOutput: string;
   price: string;
 }
 
-export const swapRouter: HttpFunction = async (req, res) => {
+export const getQuote: HttpFunction = async (req, res) => {
   try {
     // set CORS headers for all responses
     res.set("Access-Control-Allow-Origin", "*");
@@ -32,7 +32,7 @@ export const swapRouter: HttpFunction = async (req, res) => {
       return;
     }
 
-    const { tokenIn, tokenOut, amount }: SwapRequest = req.body;
+    const { tokenIn, tokenOut, amount }: QuoteRequest = req.body;
 
     if (!tokenIn || !tokenOut || !amount) {
       res.status(400).send({
@@ -42,7 +42,7 @@ export const swapRouter: HttpFunction = async (req, res) => {
     }
 
     // TODO
-    const response: SwapResponse = {
+    const response: QuoteResponse = {
       route: [tokenIn, tokenOut],
       estimatedOutput: "0",
       price: "0",

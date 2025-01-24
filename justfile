@@ -35,3 +35,7 @@ alias b := build
 # generate codebase.md that is useful to feed to LLMs
 ai-digest:
    npx ai-digest -i src --show-output-files
+
+# deploy the function as a Google Cloud Run Function
+deploy:
+   gcloud builds submit --region=us-west2 --config cloudbuild.yaml src
