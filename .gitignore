@@ -1,0 +1,8 @@
+# jetbrains IDEs
+.idea
+
+node_modules
+dist
+
+# ai-digest
+codebase.md

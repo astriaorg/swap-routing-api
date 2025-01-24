@@ -1,0 +1,4 @@
+app/fonts
+build/
+coverage/
+node_modules/

@@ -1,0 +1,18 @@
+steps:
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'build']
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'functions'
+      - 'deploy'
+      - 'swap-router'
+      - '--trigger-http'
+      - '--runtime=nodejs20'
+      - '--entry-point=swapRouter'
+      - '--memory=256MB'
+      - '--region=us-central1'
+      - '--allow-unauthenticated'
