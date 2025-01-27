@@ -1,17 +1,12 @@
 import { HttpFunction } from "@google-cloud/functions-framework";
-import { logger } from "./utils/logger";
+import { Token, CurrencyAmount, TradeType } from "@uniswap/sdk-core";
+import { Protocol } from "@uniswap/router-sdk";
+import { ethers } from "ethers";
 
-interface QuoteRequest {
-  tokenIn: string;
-  tokenOut: string;
-  amount: string;
-}
+import { AlphaRouter, ChainId, SwapRoute } from "./contrib/smart-order-router";
 
-interface QuoteResponse {
-  route: string[];
-  estimatedOutput: string;
-  price: string;
-}
+import { logger, transformSwapRouteToGetQuoteResult } from "./utils";
+import { GetQuoteParams } from "./types";
 
 export const getQuote: HttpFunction = async (req, res) => {
   try {
@@ -32,31 +27,77 @@ export const getQuote: HttpFunction = async (req, res) => {
       return;
     }
 
-    const { tokenIn, tokenOut, amount }: QuoteRequest = req.body;
-
-    if (!tokenIn || !tokenOut || !amount) {
-      res.status(400).send({
-        error: "Missing required parameters: tokenIn, tokenOut, amount",
-      });
-      return;
-    }
-
-    // TODO
-    const response: QuoteResponse = {
-      route: [tokenIn, tokenOut],
-      estimatedOutput: "0",
-      price: "0",
+    // TODO - validate query params
+    const getQuoteParams: GetQuoteParams = {
+      chainId: Number(req.query.chainId) as ChainId,
+      tokenInAddress: String(req.query.tokenInAddress),
+      tokenInDecimals: Number(req.query.tokenInDecimals),
+      tokenInSymbol: String(req.query.tokenInSymbol),
+      tokenOutAddress: String(req.query.tokenOutAddress),
+      tokenOutDecimals: Number(req.query.tokenOutDecimals),
+      tokenOutSymbol: String(req.query.tokenOutSymbol),
+      amount: String(req.query.amount),
+      type: String(req.query.type) as "exactIn" | "exactOut",
     };
-
-    logger.info("Swap route calculated", {
-      tokenIn,
-      tokenOut,
+    console.log(getQuoteParams);
+    const {
+      chainId,
+      tokenInAddress,
+      tokenInDecimals,
+      tokenInSymbol,
+      tokenOutAddress,
+      tokenOutDecimals,
+      tokenOutSymbol,
       amount,
+      type,
+    } = getQuoteParams;
+    const tokenIn = new Token(
+      chainId,
+      tokenInAddress,
+      tokenInDecimals,
+      tokenInSymbol,
+    );
+    const tokenOut = new Token(
+      chainId,
+      tokenOutAddress,
+      tokenOutDecimals,
+      tokenOutSymbol,
+    );
+    const amountIn = CurrencyAmount.fromRawAmount(tokenIn, amount);
+
+    // create router and get quote
+    const provider = new ethers.providers.JsonRpcProvider(
+      // TODO - this value should come from config data structure
+      "https://rpc.flame.astria.org",
+    );
+    const router = new AlphaRouter({
+      chainId,
+      provider,
     });
 
-    res.status(200).send(response);
+    console.log("amountIn", amountIn);
+    console.log("tokenOut", tokenOut);
+    const swapRoute: SwapRoute | null = await router.route(
+      amountIn,
+      tokenOut,
+      type === "exactIn" ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+      /*swapConfig*/ undefined,
+      { protocols: [Protocol.V3] },
+    );
+
+    console.log("swapRoute", swapRoute);
+
+    if (!swapRoute) {
+      return res
+        .status(404)
+        .send({ error: "Failed to generate client side quote" });
+    }
+
+    const data = transformSwapRouteToGetQuoteResult(type, amountIn, swapRoute);
+
+    return res.json({ data });
   } catch (error) {
-    logger.error("Error processing swap route", { error });
+    logger.error("Error processing getQuote route", { error });
     res.status(500).send({
       error: "Internal server error",
     });

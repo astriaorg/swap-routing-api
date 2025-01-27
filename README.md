@@ -1,6 +1,6 @@
 # Swap Router API
 
-A Google Cloud Function that provides routing functionality for token swaps.
+A Google Cloud Function that provides quote functionality for token swaps.
 
 ## Overview
 
@@ -26,11 +26,11 @@ npm install
 
 ### Environment Variables
 
-- `LOG_LEVEL`: Controls the logging verbosity (default: "info")
+- `LOG_LEVEL`: Controls the logging verbosity (default: "debug")
 
 ## API Reference
 
-### Get Swap Route
+### Get Quote Route
 
 Calculate the optimal route for swapping between two tokens.
 
@@ -80,11 +80,15 @@ include timestamps and are output to the console.
 ### Building
 
 ```sh
-npm run build
+npm run dev
 ```
 
-### Testing
+### Testing, Linting, Formatting
 
 ```sh
-npm test
+just test
+# lints ts, md files
+just lint
+# formats ts, md files
+npm run format
 ```
