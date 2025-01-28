@@ -65,8 +65,8 @@ export const getQuote: HttpFunction = async (req, res) => {
       tokenOutSymbol,
     );
 
-    const baseCurrency = type === 'exactIn' ? tokenIn : tokenOut
-    const quoteCurrency = type === 'exactIn' ? tokenOut : tokenIn
+    const baseCurrency = type === "exactIn" ? tokenIn : tokenOut;
+    const quoteCurrency = type === "exactIn" ? tokenOut : tokenIn;
 
     const amountInOut = CurrencyAmount.fromRawAmount(baseCurrency, amount);
 
@@ -100,7 +100,11 @@ export const getQuote: HttpFunction = async (req, res) => {
         .send({ error: "Failed to generate client side quote" });
     }
 
-    const data = transformSwapRouteToGetQuoteResult(type, amountInOut, swapRoute);
+    const data = transformSwapRouteToGetQuoteResult(
+      type,
+      amountInOut,
+      swapRoute,
+    );
 
     return res.json({ data });
   } catch (error) {

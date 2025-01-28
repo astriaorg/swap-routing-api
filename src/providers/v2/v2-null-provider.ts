@@ -11,9 +11,9 @@ export class V2NullProvider implements IV2PoolProvider {
   }
   getPoolAddress(tokenA: Token, tokenB: Token) {
     return {
-      poolAddress: '',
+      poolAddress: "",
       token0: tokenA,
-      token1: tokenB
+      token1: tokenB,
     };
   }
 }
