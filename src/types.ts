@@ -1,5 +1,6 @@
-import { ChainId } from "@/contrib/smart-order-router";
 import { Token } from "@uniswap/sdk-core";
+
+import { ChainId } from "./contrib/smart-order-router";
 
 export interface FlameNetwork {
   id: ChainId;
