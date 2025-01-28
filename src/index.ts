@@ -4,6 +4,7 @@ import { Protocol } from "@uniswap/router-sdk";
 import { ethers } from "ethers";
 
 import { AlphaRouter, ChainId, SwapRoute } from "./contrib/smart-order-router";
+import { V2NullProvider } from "./providers/v2/v2-null-provider";
 
 import { logger, transformSwapRouteToGetQuoteResult } from "./utils";
 import { GetQuoteParams } from "./types";
@@ -63,7 +64,11 @@ export const getQuote: HttpFunction = async (req, res) => {
       tokenOutDecimals,
       tokenOutSymbol,
     );
-    const amountIn = CurrencyAmount.fromRawAmount(tokenIn, amount);
+
+    const baseCurrency = type === 'exactIn' ? tokenIn : tokenOut
+    const quoteCurrency = type === 'exactIn' ? tokenOut : tokenIn
+
+    const amountInOut = CurrencyAmount.fromRawAmount(baseCurrency, amount);
 
     // create router and get quote
     const provider = new ethers.providers.JsonRpcProvider(
@@ -73,13 +78,15 @@ export const getQuote: HttpFunction = async (req, res) => {
     const router = new AlphaRouter({
       chainId,
       provider,
+      v2PoolProvider: new V2NullProvider(), // no v2 pools
     });
 
-    console.log("amountIn", amountIn);
+    console.log("amount", amountInOut);
     console.log("tokenOut", tokenOut);
+
     const swapRoute: SwapRoute | null = await router.route(
-      amountIn,
-      tokenOut,
+      amountInOut,
+      quoteCurrency,
       type === "exactIn" ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
       /*swapConfig*/ undefined,
       { protocols: [Protocol.V3] },
@@ -93,7 +100,7 @@ export const getQuote: HttpFunction = async (req, res) => {
         .send({ error: "Failed to generate client side quote" });
     }
 
-    const data = transformSwapRouteToGetQuoteResult(type, amountIn, swapRoute);
+    const data = transformSwapRouteToGetQuoteResult(type, amountInOut, swapRoute);
 
     return res.json({ data });
   } catch (error) {
