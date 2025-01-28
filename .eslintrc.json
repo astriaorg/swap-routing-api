@@ -21,7 +21,7 @@
     }
   },
   "ignorePatterns": [
-    "src/contrib/smart-order-router/",
+    "src/vendor/smart-order-router/",
     "node_modules",
     "coverage",
     "build",

@@ -3,7 +3,7 @@ import { Token, CurrencyAmount, TradeType } from "@uniswap/sdk-core";
 import { Protocol } from "@uniswap/router-sdk";
 import { ethers } from "ethers";
 
-import { AlphaRouter, ChainId, SwapRoute } from "./contrib/smart-order-router";
+import { AlphaRouter, ChainId, SwapRoute } from "./vendor/smart-order-router";
 import { V2NullProvider } from "./providers/v2/v2-null-provider";
 
 import { logger, transformSwapRouteToGetQuoteResult } from "./utils";

@@ -1,5 +1,5 @@
 import { Token } from "@uniswap/sdk-core";
-import { IV2PoolProvider } from "../../contrib/smart-order-router/providers/v2/pool-provider";
+import { IV2PoolProvider } from "../../vendor/smart-order-router";
 
 export class V2NullProvider implements IV2PoolProvider {
   async getPools() {

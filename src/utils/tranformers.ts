@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount } from "@uniswap/sdk-core";
 import { Pool } from "@uniswap/v3-sdk";
 
 import { GetQuoteResult, V3PoolInRoute } from "../types";
-import { routeAmountsToString, SwapRoute } from "../contrib/smart-order-router";
+import { routeAmountsToString, SwapRoute } from "../vendor/smart-order-router";
 
 export function transformSwapRouteToGetQuoteResult(
   type: "exactIn" | "exactOut",

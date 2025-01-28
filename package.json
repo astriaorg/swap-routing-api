@@ -10,10 +10,10 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "compile-v3-types": "npx typechain --target ethers-v5 --out-dir src/contrib/smart-order-router/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
-    "compile-v2-types": "npx typechain --target ethers-v5 --out-dir src/contrib/smart-order-router/types/v2 './node_modules/@uniswap/?(v2-core|v2-periphery)/build/*UniswapV2*.json'",
-    "compile-router": "npx typechain --target ethers-v5 --out-dir src/contrib/smart-order-router/types/other './node_modules/@uniswap/swap-router-contracts/artifacts/contracts/**/*.json'",
-    "compile-external-types": "npx typechain --target ethers-v5 --out-dir src/contrib/smart-order-router/types/other 'src/contrib/smart-order-router/abis/**/*.json'"
+    "compile-v3-types": "npx typechain --target ethers-v5 --out-dir src/vendor/smart-order-router/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
+    "compile-v2-types": "npx typechain --target ethers-v5 --out-dir src/vendor/smart-order-router/types/v2 './node_modules/@uniswap/?(v2-core|v2-periphery)/build/*UniswapV2*.json'",
+    "compile-router": "npx typechain --target ethers-v5 --out-dir src/vendor/smart-order-router/types/other './node_modules/@uniswap/swap-router-contracts/artifacts/contracts/**/*.json'",
+    "compile-external-types": "npx typechain --target ethers-v5 --out-dir src/vendor/smart-order-router/types/other 'src/vendor/smart-order-router/abis/**/*.json'"
   },
   "license": "GPL",
   "engines": {
