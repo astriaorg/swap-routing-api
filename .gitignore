@@ -1,8 +1,19 @@
 # jetbrains IDEs
 .idea
 
+# npm
 node_modules
+
+# builds
 dist
 
 # ai-digest
 codebase.md
+
+# infra keys
+*-key.json
+*-key.*.json
+
+# environments
+.env.local
+.env

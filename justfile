@@ -34,8 +34,34 @@ alias b := build
 
 # generate codebase.md that is useful to feed to LLMs
 ai-digest:
-   npx ai-digest -i src --show-output-files
+  npx ai-digest -i src --show-output-files
 
-# deploy the function as a Google Cloud Run Function
+# authenticate with gcloud using a service account
+[group('infra')]
+gcloud-auth saname sakeypath:
+  gcloud auth activate-service-account {{saname}} --key-file={{sakeypath}}
+
+# deploy via gcloud build
+[group('infra')]
+deploy-cloudbuild:
+  gcloud builds submit --config cloudbuild.yaml src
+
+# deploy via gcloud functions deploy command
+[group('infra')]
 deploy:
-   gcloud builds submit --region=us-west2 --config cloudbuild.yaml src
+  gcloud functions deploy get-quote \
+    --entry-point=getQuote \
+    --trigger-http \
+    --runtime nodejs22 \
+    --region=us-west2 \
+    --allow-unauthenticated
+
+# compacts contents of json file
+[group('utils')]
+compact-json filepath:
+  cat {{filepath}} | jq -c
+
+# encodes a file as base64
+[group('utils')]
+encode-base64 filepath:
+  base64 -i {{filepath}}
