@@ -38,4 +38,9 @@ jobs:
 
       - name: Deploy to Cloud Run Functions
         run: |
-          just deploy
+          gcloud functions deploy get-quote \
+            --entry-point=getQuote \
+            --trigger-http \
+            --runtime nodejs22 \
+            --region=us-west2 \
+            --allow-unauthenticated
