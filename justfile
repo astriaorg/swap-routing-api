@@ -1,10 +1,6 @@
 _default:
   @just --list
 
-# copy .env.example to .env.local
-cp-env:
-  cp .env.example .env.local
-
 format:
   npm run format
 alias f := format
@@ -31,10 +27,6 @@ run:
 build:
   npm run build
 alias b := build
-
-# generate codebase.md that is useful to feed to LLMs
-ai-digest:
-  npx ai-digest -i src --show-output-files
 
 # authenticate with gcloud using a service account
 [group('infra')]
@@ -65,3 +57,13 @@ compact-json filepath:
 [group('utils')]
 encode-base64 filepath:
   base64 -i {{filepath}}
+
+# generate codebase.md that is useful to feed to LLMs
+[group('utils')]
+ai-digest:
+  npx ai-digest -i src --show-output-files
+
+# copy .env.example to .env.local
+[group('utils')]
+cp-env:
+  cp .env.example .env.local
