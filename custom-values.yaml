@@ -1,0 +1,14 @@
+ingress:
+  enabled: true
+  hostname: localdev.me
+  className: nginx
+  services:
+    api:
+      hosts:
+        - swap-api.localdev.me
+      path: /
+      pathType: Prefix
+      service:
+        name: "swap-routing-api-service"
+        port:
+          name: api-svc
