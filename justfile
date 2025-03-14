@@ -9,7 +9,8 @@ lint-md:
   docker run --rm -v $PWD:/workdir davidanson/markdownlint-cli2:v0.8.1 \
     "**/*.md" \
     "#node_modules" \
-    "#codebase.md"
+    "#codebase.md" \
+    "#CLAUDE.md"
 
 lint:
   npm run lint
@@ -33,20 +34,10 @@ alias b := build
 gcloud-auth saname sakeypath:
   gcloud auth activate-service-account {{saname}} --key-file={{sakeypath}}
 
-# deploy via gcloud build
-[group('infra')]
-deploy-cloudbuild:
-  gcloud builds submit --config cloudbuild.yaml src
-
-# deploy via gcloud functions deploy command
+# deploy Express app (placeholder - implement based on your deployment strategy)
 [group('infra')]
 deploy:
-  gcloud functions deploy get-quote \
-    --entry-point=getQuote \
-    --trigger-http \
-    --runtime nodejs22 \
-    --region=us-west2 \
-    --allow-unauthenticated
+  echo "Implement your Express app deployment strategy here"
 
 # compacts contents of json file
 [group('utils')]
