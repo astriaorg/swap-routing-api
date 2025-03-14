@@ -119,11 +119,12 @@ setup-local-env tag="local":
   just create-kind-cluster
   # Install NGINX Ingress Controller
   kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-  # Wait for ingress controller to be ready
-  kubectl wait --namespace ingress-nginx \
-    --for=condition=ready pod \
-    --selector=app.kubernetes.io/component=controller \
-    --timeout=90s
+  # Wait for namespace to be ready
+  kubectl wait --for=condition=Active namespace/ingress-nginx --timeout=60s
+  # Wait for deployment to be ready
+  kubectl wait --namespace ingress-nginx --for=condition=Available deployment/ingress-nginx-controller --timeout=90s
+  # Wait for ingress controller pod to be ready
+  kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
   just docker-build {{tag}}
   just kind-load-image {{tag}}
   just helm-deploy swap-routing-api default ./chart/values/local.yaml

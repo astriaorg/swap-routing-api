@@ -12,3 +12,7 @@ ingress:
         name: "swap-routing-api-service"
         port:
           name: api-svc
+
+images:
+  api:
+    tag: "local"
