@@ -1,0 +1,49 @@
+global:
+  namespaceOverride: ""
+  replicaCount: 1
+  # Whether to use TTY readable logging, when false use JSON.
+  # Best to be false in production environments, true for clean logs on local dev.
+  useTTY: false
+  dev: false
+
+images:
+  api:
+    repo: "ghcr.io/astriaorg/swap-routing-api"
+    pullPolicy: IfNotPresent
+    tag: "0.1.0"
+
+config:
+  # RPC endpoint for the blockchain
+  rpcEndpoint: "https://rpc.flame.astria.org"
+  # Log level (debug, info, warn, error)
+  logLevel: "info"
+
+ingress:
+  enabled: false
+  labels: {}
+  hostname: localdev.me
+  className: nginx
+  services:
+    api:
+      hosts:
+        - swap-api.{{ .Values.ingress.hostname }}
+      path: /
+      pathType: Prefix
+      service:
+        name: "swap-routing-api-service"
+        port:
+          name: api-svc
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+ports:
+  api: 5001
+
+service:
+  annotations: {}

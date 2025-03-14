@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: swap-routing-api-env
+  namespace: {{ include "swapRoutingApi.namespace" . }}
+data:
+  NODE_ENV: "production"
+  LOG_FORMAT: {{ if .Values.global.useTTY }}"pretty"{{ else }}"json"{{ end }}

@@ -1,4 +1,4 @@
-import { HttpFunction } from "@google-cloud/functions-framework";
+import { Request, Response } from "express";
 import { Token, CurrencyAmount, TradeType } from "@uniswap/sdk-core";
 import { Protocol } from "@uniswap/router-sdk";
 import { ethers } from "ethers";
@@ -9,20 +9,12 @@ import { V2NullProvider } from "./providers/v2/v2-null-provider";
 import { logger, transformSwapRouteToGetQuoteResult } from "./utils";
 import { GetQuoteParams } from "./types";
 
-export const getQuote: HttpFunction = async (req, res) => {
+export const getQuoteHandler = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
-    // set CORS headers for all responses
-    res.set("Access-Control-Allow-Origin", "*");
-
-    // handle OPTIONS request for CORS preflight
-    if (req.method === "OPTIONS") {
-      res.set("Access-Control-Allow-Methods", "GET");
-      res.set("Access-Control-Allow-Headers", "Content-Type");
-      res.set("Access-Control-Max-Age", "3600");
-      res.status(204).send("");
-      return;
-    }
-
+    // Validate method
     if (req.method !== "GET") {
       res.status(405).send({ error: "Method not allowed" });
       return;
@@ -95,9 +87,8 @@ export const getQuote: HttpFunction = async (req, res) => {
     console.log("swapRoute", swapRoute);
 
     if (!swapRoute) {
-      return res
-        .status(404)
-        .send({ error: "Failed to generate client side quote" });
+      res.status(404).send({ error: "Failed to generate client side quote" });
+      return;
     }
 
     const data = transformSwapRouteToGetQuoteResult(
@@ -106,7 +97,7 @@ export const getQuote: HttpFunction = async (req, res) => {
       swapRoute,
     );
 
-    return res.json({ data });
+    res.json({ data });
   } catch (error) {
     logger.error("Error processing getQuote route", { error });
     res.status(500).send({

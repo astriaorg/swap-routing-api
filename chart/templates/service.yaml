@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: swap-routing-api-service
+  namespace: {{ include "swapRoutingApi.namespace" . }}
+  {{- if .Values.service.annotations }}
+  annotations:
+    {{- include "swapRoutingApi.serviceAnnotations" . | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    {{- include "swapRoutingApi.labels" . | nindent 4 }}
+  ports:
+    - name: api-svc
+      port: {{ .Values.ports.api }}
+      targetPort: api
+---

@@ -1,0 +1,15 @@
+apiVersion: v2
+name: swap-routing-api
+description: API for token swap routing and quotes
+
+type: application
+
+# Chart version
+version: 0.1.0
+
+# Application version
+appVersion: "0.1.0"
+
+maintainers:
+  - name: Astria Team
+    url: astria.org
