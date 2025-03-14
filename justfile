@@ -52,8 +52,13 @@ docker-build-push tag="latest":
 
 # Install or upgrade the Helm chart
 [group('k8s')]
-helm-deploy name="swap-routing-api" namespace="default":
-  helm upgrade --install {{name}} ./chart --namespace {{namespace}} --create-namespace
+helm-deploy name="swap-routing-api" namespace="default" values="":
+  #!/bin/bash
+  if [ -n "{{values}}" ]; then
+    helm upgrade --install {{name}} ./chart --namespace {{namespace}} --create-namespace --values {{values}}
+  else
+    helm upgrade --install {{name}} ./chart --namespace {{namespace}} --create-namespace
+  fi
 
 # Uninstall the Helm chart
 [group('k8s')]
@@ -121,7 +126,7 @@ setup-local-env tag="local":
     --timeout=90s
   just docker-build {{tag}}
   just kind-load-image {{tag}}
-  just helm-deploy swap-routing-api default
+  just helm-deploy swap-routing-api default ./chart/values/local.yaml
 
 # compacts contents of json file
 [group('utils')]
